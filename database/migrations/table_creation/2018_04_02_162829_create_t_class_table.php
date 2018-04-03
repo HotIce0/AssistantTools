@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,9 +15,9 @@ class CreateTClassTable extends Migration
     {
         Schema::create('t_class', function (Blueprint $table) {
             $table->increments('class_id');
-            $table->string('class_identifier', 20)->unique()->comment('°à¼¶±àºÅ');
-            $table->string('class_name', 50)->comment('°à¼¶Ãû³Æ');
-            $table->integer('major_id')->unsigned()->comment('ËùÊô×¨Òµ');
+            $table->string('class_identifier', 20)->unique()->comment('ç­çº§ç¼–å·');
+            $table->string('class_name', 50)->comment('ç­çº§åç§°');
+            $table->integer('major_id')->unsigned()->comment('æ‰€å±žä¸“ä¸š');
 
             $table->string('creator', 20)->nullable();
             $table->string('updater', 20)->nullable();

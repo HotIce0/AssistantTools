@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,8 +15,8 @@ class CreateTCollegeTable extends Migration
     {
         Schema::create('t_college', function (Blueprint $table) {
             $table->increments('college_id');
-            $table->string('college_identifier', 20)->unique()->comment('Ñ§Ôº±àºÅ');
-            $table->string('college_name', 50)->comment('Ñ§ÔºÃû³Æ');
+            $table->string('college_identifier', 20)->unique()->comment('å­¦é™¢ç¼–å·');
+            $table->string('college_name', 50)->comment('å­¦é™¢åç§°');
 
             $table->string('creator', 20)->nullable();
             $table->string('updater', 20)->nullable();

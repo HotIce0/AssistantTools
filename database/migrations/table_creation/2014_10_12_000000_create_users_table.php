@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,17 +15,17 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_job_id', 255)->unique()->comment('(Ñ§ºÅ/¹¤ºÅ)');
-            $table->string('email', 255)->unique()->nullable()->comment('[ÓÊÏä]');
-            $table->string('phone_number', 20)->unique()->nullable()->comment('[ÊÖ»úºÅÂë]');
-            $table->string('qq_number', 20)->unique()->nullable()->comment('[QQºÅÂë]');
-            $table->string('wechart_name', 20)->unique()->nullable()->comment('[Î¢ÐÅÃû]');
-            $table->string('name', 255)->nullable(false)->comment('(ÐÕÃû)');
-            $table->integer('college_id')->unsigned()->nullable()->comment('[Ñ§ÔºID]');
-            $table->integer('class_id')->unsigned()->nullable()->comment('[°à¼¶ID]');
+            $table->string('user_job_id', 255)->unique()->comment('(å­¦å·/å·¥å·)');
+            $table->string('email', 255)->unique()->nullable()->comment('[é‚®ç®±]');
+            $table->string('phone_number', 20)->unique()->nullable()->comment('[æ‰‹æœºå·ç ]');
+            $table->string('qq_number', 20)->unique()->nullable()->comment('[QQå·ç ]');
+            $table->string('wechart_name', 20)->unique()->nullable()->comment('[å¾®ä¿¡å]');
+            $table->string('name', 255)->nullable(false)->comment('(å§“å)');
+            $table->integer('college_id')->unsigned()->nullable()->comment('[å­¦é™¢ID]');
+            $table->integer('class_id')->unsigned()->nullable()->comment('[ç­çº§ID]');
             $table->string('password', 255);
-            $table->integer('role_id')->unsigned()->comment('½ÇÉ«ID');
-            $table->string('wx_open_id', 255)->unique()->nullable()->comment('[Î¢ÐÅopen_id]');
+            $table->integer('role_id')->unsigned()->comment('è§’è‰²ID');
+            $table->string('wx_open_id', 255)->unique()->nullable()->comment('[å¾®ä¿¡open_id]');
             
             $table->rememberToken();
 

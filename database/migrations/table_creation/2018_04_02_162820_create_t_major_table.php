@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,9 +15,9 @@ class CreateTMajorTable extends Migration
     {
         Schema::create('t_major', function (Blueprint $table) {
             $table->increments('major_id');
-            $table->string('major_identifier', 30)->unique()->comment('×¨Òµ±àºÅ');
-            $table->string('major_name', 50)->comment('×¨ÒµÃû³Æ');
-            $table->integer('college_id')->unsigned()->comment('ËùÊôÑ§Ôº');                //Íâ¼ü
+            $table->string('major_identifier', 30)->unique()->comment('ä¸“ä¸šç¼–å·');
+            $table->string('major_name', 50)->comment('ä¸“ä¸šåç§°');
+            $table->integer('college_id')->unsigned()->comment('æ‰€å±žå­¦é™¢');                //å¤–é”®
 
             $table->string('creator', 20)->nullable();
             $table->string('updater', 20)->nullable();

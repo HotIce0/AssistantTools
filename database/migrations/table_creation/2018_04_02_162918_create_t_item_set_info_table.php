@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,11 +14,11 @@ class CreateTItemSetInfoTable extends Migration
     public function up()
     {
         Schema::create('t_item_set_info', function (Blueprint $table) {
-            $table->increments('item_id')->comment('Ñ¡ÏîID');
-            $table->integer('item_no')->unsigned()->comment('Ñ¡Ïî±àºÅ');
-            $table->string('item_content_id', 10)->comment('Ñ¡ÏîÄÚÈÝID');
-            $table->string('item_content', 200)->comment('Ñ¡ÏîÄÚÈÝ');
-            $table->tinyInteger('sort_id')->unsigned()->comment('ÅÅÐòID');
+            $table->increments('item_id')->comment('é€‰é¡¹ID');
+            $table->integer('item_no')->unsigned()->comment('é€‰é¡¹ç¼–å·');
+            $table->string('item_content_id', 10)->comment('é€‰é¡¹å†…å®¹ID');
+            $table->string('item_content', 200)->comment('é€‰é¡¹å†…å®¹');
+            $table->tinyInteger('sort_id')->unsigned()->comment('æŽ’åºID');
             $table->unique(['item_no','item_content_id']);
 
             $table->string('creator', 20)->nullable();

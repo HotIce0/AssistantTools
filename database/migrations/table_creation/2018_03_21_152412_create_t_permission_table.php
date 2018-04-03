@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,8 +16,8 @@ class CreateTPermissionTable extends Migration
         Schema::create('t_permission', function (Blueprint $table) {
             $table->increments('permission_id');
 
-            $table->string('permission_no')->unique()->comment('È¨ÏÞ±àºÅ');
-            $table->string('permission_name', 255)->comment('È¨ÏÞÃû³Æ');
+            $table->string('permission_no')->unique()->comment('æƒé™ç¼–å·');
+            $table->string('permission_name', 255)->comment('æƒé™åç§°');
 
             $table->string('creator', 20)->nullable();
             $table->string('updater', 20)->nullable();

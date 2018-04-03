@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRoleUsersForeignKey extends Migration
+class CreateClassCourseTimeAssociateForeignKey extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateRoleUsersForeignKey extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\Schema::table('users', function ($table){
-            $table->foreign('role_id')->references('role_id')->on('t_role');
+        \Illuminate\Support\Facades\Schema::table('t_course_time_associate', function ($table){
+            $table->foreign('class_id')->references('class_id')->on('t_class');
         });
     }
 
@@ -25,8 +25,8 @@ class CreateRoleUsersForeignKey extends Migration
      */
     public function down()
     {
-        \Illuminate\Support\Facades\Schema::table('users', function ($table){
-            $table->dropForeign(['role_id']);
+        \Illuminate\Support\Facades\Schema::table('t_course_time_associate', function ($table){
+            $table->dropForeign(['class_id']);
         });
     }
 }

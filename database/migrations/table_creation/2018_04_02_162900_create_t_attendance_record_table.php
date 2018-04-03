@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,14 +15,13 @@ class CreateTAttendanceRecordTable extends Migration
     {
         Schema::create('t_attendance_record', function (Blueprint $table) {
             $table->increments('attendance_record_id');
-            $table->integer('class_id')->unsigned()->comment('°à¼¶ID');
-            $table->integer('course_id')->unsigned()->nullable()->comment('¿Î³ÌID');
-            $table->string('course_type', 10)->nullable(false)->comment('¿Î³ÌÀàÐÍ');
-            $table->integer('leavers_num')->unsigned()->nullable(false)->comment('Çë¼ÙÈËÊý');
-            $table->string('leave_detail', 512)->nullable()->comment('Çë¼ÙÇé¿ö');
-            $table->integer('course_time')->unsigned()->nullable(false)->comment('¿Î³ÌÊ±¼ä');
-            $table->integer('mobile_num')->nullable(false)->comment('ÊÖ»úÈë´üÊýÁ¿');
-            $table->string('mobile_detail_picture_file_name', 512)->nullable()->comment('ÊÖ»úÈë´üÇé¿öÍ¼Æ¬ÎÄ¼þÃû');
+            $table->string('course_type', 10)->nullable(false)->comment('è¯¾ç¨‹ç±»åž‹');
+            $table->integer('course_time_associate_id')->unsigned()->nullable()->comment('è¯¾ç¨‹æ—¶é—´è”ç³»ID');
+            
+            $table->integer('leavers_num')->unsigned()->nullable(false)->comment('è¯·å‡äººæ•°');
+            $table->string('leave_detail', 512)->nullable()->comment('è¯·å‡æƒ…å†µ');
+            $table->integer('mobile_num')->nullable(false)->comment('æ‰‹æœºå…¥è¢‹æ•°é‡');
+            $table->string('mobile_detail_picture_file_name', 512)->nullable()->comment('æ‰‹æœºå…¥è¢‹æƒ…å†µå›¾ç‰‡æ–‡ä»¶å');
 
             $table->string('creator', 20)->nullable();
             $table->string('updater', 20)->nullable();

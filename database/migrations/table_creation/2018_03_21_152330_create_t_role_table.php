@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,8 +16,8 @@ class CreateTRoleTable extends Migration
         Schema::create('t_role', function (Blueprint $table) {
             $table->increments('role_id');
             
-            $table->string('role_name', 255)->comment('½ÇÉ«Ãû³Æ');
-            $table->text('role_permission')->comment('½ÇÉ«ÓµÓÐµÄÈ¨ÏÞID(jsonÊý×éÐÎÊ½´æ´¢permission_no)');
+            $table->string('role_name', 255)->comment('è§’è‰²åç§°');
+            $table->text('role_permission')->comment('è§’è‰²æ‹¥æœ‰çš„æƒé™ID(jsonæ•°ç»„å½¢å¼å­˜å‚¨permission_no)');
 
             $table->string('creator', 20)->nullable();
             $table->string('updater', 20)->nullable();

@@ -1,10 +1,10 @@
-﻿<?php
+<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePasswordResetsTable extends Migration
+class CreateCollegeUsersForeignKey extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreatePasswordResetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+        \Illuminate\Support\Facades\Schema::table('users', function ($table){
+            $table->foreign('college_id')->references('college_id')->on('t_college');
         });
     }
 
@@ -27,6 +25,8 @@ class CreatePasswordResetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('password_resets');
+        \Illuminate\Support\Facades\Schema::table('users', function ($table){
+            $table->dropForeign(['college_id']);
+        });
     }
 }
