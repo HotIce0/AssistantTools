@@ -29,7 +29,7 @@ class LoginController extends Controller
         //save data to db
 
         //send login success response to client with skey
-        
+
 
 
         return 'openid = ' . $authResult->openid . '  session_key = ' . $authResult->session_key;

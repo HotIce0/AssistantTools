@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->integer('class_id')->unsigned()->nullable()->comment('[班级ID]');
             $table->string('password', 255);
             $table->integer('role_id')->unsigned()->comment('角色ID');
-            $table->string('wx_open_id', 255)->unique()->nullable()->comment('[微信open_id]');
+            $table->integer('session_id')->unsigned()->unique()->nullable(false)->comment('[会话ID]');
             
             $table->rememberToken();
 
