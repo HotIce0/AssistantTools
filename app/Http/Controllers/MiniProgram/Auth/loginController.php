@@ -3,22 +3,29 @@
 namespace App\Http\Controllers\MiniProgram\Auth;
 
 use App\Http\Controllers\Controller;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use App\Models\Session;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
     public function index(Request $request){
+        $resultBody = array();
+
         //Get auth data from headers
         $authData = $this->getAuthData($request);
-       if($authData  === null)
-            return 'Data not complete';
+       if($authData  === null){
+            $resultBody['code'] = -1;
+            $resultBody['error'] = 'auth data not complete';
+            return $this->sendResult($resultBody);
+       }
 
         //Check auth data
         $authResult = $this->checkAuthData($authData);
-        if($authResult === false)
-            return 'Auth Failed';
+        if($authResult === false){
+            $resultBody['code'] = -1;
+            $resultBody['error'] = 'Auth Failed';
+            return $this->sendResult($resultBody);
+        }
 
         //generate 3rd key (skey)
         $skey = $this->generateSkey($authResult);
@@ -27,12 +34,19 @@ class LoginController extends Controller
         $decryptedUserInfo = $this->decryptUserInfo($authData, $authResult);
 
         //save data to db
+        if(!Session::storeUserInfo($decryptedUserInfo, $skey, $authResult->session_key)){
+            $resultBody['code'] = -1;
+            $resultBody['error'] = 'Session create Fail';
+            return $this->sendResult($resultBody);
+        }
 
         //send login success response to client with skey
-
-
-
-        return 'openid = ' . $authResult->openid . '  session_key = ' . $authResult->session_key;
+        $resultBody['code'] = 0;
+        $resultBody['data'] = [
+            'userinfo' => $decryptedUserInfo,
+            'skey' => $skey,
+        ];
+        return $this->sendResult($resultBody);
     }
 
     /**
@@ -133,5 +147,13 @@ class LoginController extends Controller
         // generate 3rd key (skey)
         $skey = sha1($authResult->session_key . mt_rand());
         return $skey;
+    }
+
+    /**
+     * @param $resultBody
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    private function sendResult($resultBody){
+        return response($resultBody);
     }
 }

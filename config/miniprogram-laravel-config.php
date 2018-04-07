@@ -7,4 +7,7 @@ return [
 
     'APP_ID' => 'wx2f7988a6f230a9ad',
     'APP_SECRET' => '559f5b1a3e688cfe2886a22fecfebbbf',
+
+    //微信登陆有效期 7200 s = 120 minute
+    'WX_LOGIN_EXPIRES' => '7200',
 ];

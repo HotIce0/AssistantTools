@@ -46,7 +46,8 @@ Route::group(['prefix' => 'miniprogram'], function(){
      */
     Route::any('login', 'MiniProgram\Auth\LoginController@index');
 
-    Route::get('basic1', function() {
-
+    Route::get('textRequest', function(\Illuminate\Http\Request $request) {
+        $res = \App\Models\Session::checkLogin($request);
+        return response($res);
     });
 });
