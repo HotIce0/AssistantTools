@@ -15,6 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('id_card_no', 18)->unique()->nullable(false)->comment('身份证号码');
             $table->string('user_job_id', 255)->unique()->comment('(学号/工号)');
             $table->string('email', 255)->unique()->nullable()->comment('[邮箱]');
             $table->string('phone_number', 20)->unique()->nullable()->comment('[手机号码]');
@@ -25,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->integer('class_id')->unsigned()->nullable()->comment('[班级ID]');
             $table->string('password', 255);
             $table->integer('role_id')->unsigned()->comment('角色ID');
-            $table->integer('session_id')->unsigned()->unique()->nullable(false)->comment('[会话ID]');
+            $table->integer('session_id')->unsigned()->unique()->nullable()->comment('[会话ID]');
             
             $table->rememberToken();
 

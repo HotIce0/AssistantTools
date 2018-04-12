@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class Session extends Model
 {
@@ -96,5 +95,13 @@ class Session extends Model
             return false;
         else
             return true;
+    }
+
+    /**
+     * @param Request $request
+     * @return string || null
+     */
+    public static function getSKeyFromRequest(Request $request){
+        return $request->header(config('constants.WX_HEADER_SKEY'));
     }
 }
