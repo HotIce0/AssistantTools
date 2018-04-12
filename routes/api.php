@@ -16,3 +16,17 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+/**
+ * 小程序登陆认证,建立会话
+ */
+Route::get('login', 'MiniProgram\Auth\LoginController@index');
+
+/**
+ * 小程序用户绑定平台账号
+ */
+Route::group(['prefix' => 'bind'], function() {
+    Route::get('getBindStatus', 'MiniProgram\Bind\BindController@getBindStatus');
+    Route::post('bind', 'MiniProgram\Bind\BindController@bind');
+});
+
