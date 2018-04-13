@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCollegeUsersForeignKey extends Migration
+class CreateUsersForeignKeyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class CreateCollegeUsersForeignKey extends Migration
     public function up()
     {
         \Illuminate\Support\Facades\Schema::table('users', function ($table){
-            $table->foreign('college_id')->references('college_id')->on('t_college');
+            $table->foreign('role_id')->references('role_id')->on('t_role');
+            $table->foreign('session_id')->references('session_id')->on('t_session');
         });
     }
 
@@ -26,7 +27,8 @@ class CreateCollegeUsersForeignKey extends Migration
     public function down()
     {
         \Illuminate\Support\Facades\Schema::table('users', function ($table){
-            $table->dropForeign(['college_id']);
+            $table->dropForeign(['role_id']);
+            $table->dropForeign(['session_id']);
         });
     }
 }

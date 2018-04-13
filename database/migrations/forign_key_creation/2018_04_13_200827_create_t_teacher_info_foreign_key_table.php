@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMajorClassForeignKey extends Migration
+class CreateTTeacherInfoForeignKeyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateMajorClassForeignKey extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\Schema::table('t_class', function ($table){
-            $table->foreign('major_id')->references('major_id')->on('t_major');
+        \Illuminate\Support\Facades\Schema::table('t_teacher_info', function ($table){
+            $table->foreign('college_id')->references('college_id')->on('t_college');
         });
     }
 
@@ -25,8 +25,8 @@ class CreateMajorClassForeignKey extends Migration
      */
     public function down()
     {
-        \Illuminate\Support\Facades\Schema::table('t_class', function ($table){
-            $table->dropForeign(['major_id']);
+        \Illuminate\Support\Facades\Schema::table('t_teacher_info', function ($table){
+            $table->dropForeign(['college_id']);
         });
     }
 }

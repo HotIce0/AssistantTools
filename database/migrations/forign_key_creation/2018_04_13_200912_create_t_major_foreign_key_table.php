@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSessionUsersForeignKeyTable extends Migration
+class CreateTMajorForeignKeyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateSessionUsersForeignKeyTable extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\Schema::table('users', function ($table){
-            $table->foreign('session_id')->references('session_id')->on('t_session');
+        \Illuminate\Support\Facades\Schema::table('t_major', function ($table){
+            $table->foreign('college_id')->references('college_id')->on('t_college');
         });
     }
 
@@ -25,8 +25,8 @@ class CreateSessionUsersForeignKeyTable extends Migration
      */
     public function down()
     {
-        \Illuminate\Support\Facades\Schema::table('users', function ($table){
-            $table->dropForeign(['session_id']);
+        \Illuminate\Support\Facades\Schema::table('t_major', function ($table){
+            $table->dropForeign(['college_id']);
         });
     }
 }

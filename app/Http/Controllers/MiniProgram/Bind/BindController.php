@@ -44,15 +44,37 @@ class BindController extends Controller{
     }
 
     /**
-     * 绑定平台账号API
+     * 绑定平台账号API(允许覆盖绑定，即可以覆盖平台用户原来绑定的微信账号)
      * @param Request $request
      * @return array
      * 绑定成功: {"code": 0}
-     * 绑定失败: {"code": -1, "error": "原因内容"} (原因内容：1.用户名与密码不匹配 2.用户名不存在)
+     * 绑定失败: {"code": -1, "error": "原因内容"} (原因内容：1.用户名与密码不匹配 2.用户名不存在 3.用户名或密码不完整) 以及登陆状态验证返回值
      */
     public function bind(Request $request){
+        //登陆状态验证
+        $res = Session::checkLogin($request);
+        if($res['code'] == -1){
+            //登陆验证失败
+            return response($res);
+        }
+        //获取skey
+        $skey = Session::getSKeyFromRequest($request);
+
+        //获取Session记录
+        $session = Session::findUserInfoBySKey($skey);
+
+        //检验参数完整性
         $jobId = $request->jobId;
         $idCardNo = $request->idCardNo;
+        if(empty($jobId) or empty($idCardNo))
+            return response([
+                "code" => -1,
+                "error" => '用户名或密码不完整',
+            ]);
+        
+
+
+
         return 'sao';
     }
 }

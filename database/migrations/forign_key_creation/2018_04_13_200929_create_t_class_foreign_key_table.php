@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClassUsersForeignKey extends Migration
+class CreateTClassForeignKeyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateClassUsersForeignKey extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\Schema::table('users', function ($table){
-            $table->foreign('class_id')->references('class_id')->on('t_class');
+        \Illuminate\Support\Facades\Schema::table('t_class', function ($table){
+            $table->foreign('major_id')->references('major_id')->on('t_major');
         });
     }
 
@@ -25,8 +25,8 @@ class CreateClassUsersForeignKey extends Migration
      */
     public function down()
     {
-        \Illuminate\Support\Facades\Schema::table('users', function ($table){
-            $table->dropForeign(['class']);
+        \Illuminate\Support\Facades\Schema::table('t_class', function ($table){
+            $table->dropForeign(['major_id']);
         });
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClassCourseTimeAssociateForeignKey extends Migration
+class CreateTStudentInfoForeignKeyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateClassCourseTimeAssociateForeignKey extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\Schema::table('t_course_time_associate', function ($table){
+        \Illuminate\Support\Facades\Schema::table('t_student_info', function ($table){
             $table->foreign('class_id')->references('class_id')->on('t_class');
         });
     }
@@ -25,8 +25,8 @@ class CreateClassCourseTimeAssociateForeignKey extends Migration
      */
     public function down()
     {
-        \Illuminate\Support\Facades\Schema::table('t_course_time_associate', function ($table){
-            $table->dropForeign(['class_id']);
+        \Illuminate\Support\Facades\Schema::table('t_student_info', function ($table){
+            $table->dropForeign(['class']);
         });
     }
 }

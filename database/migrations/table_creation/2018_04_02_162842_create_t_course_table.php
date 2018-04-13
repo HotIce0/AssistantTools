@@ -16,7 +16,7 @@ class CreateTCourseTable extends Migration
         Schema::create('t_course', function (Blueprint $table) {
             $table->increments('course_id');
             $table->string('course_name', 255)->comment('课程名称');
-            $table->string('teacher_name', 255)->comment('授课教师');
+            $table->integer('teacher_info_id')->unsigned()->nullable(false)->comment('授课教师信息id');
 
             $table->string('creator', 20)->nullable();
             $table->string('updater', 20)->nullable();
