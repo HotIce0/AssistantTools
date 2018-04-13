@@ -6,7 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Session;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
+/**
+ * Class BindController
+ * @package App\Http\Controllers\MiniProgram\Bind
+ * @author Sao Guang
+ */
 class BindController extends Controller{
     /**
      * 获取绑定状态的API
@@ -57,24 +63,50 @@ class BindController extends Controller{
             //登陆验证失败
             return response($res);
         }
+
+        //检验参数完整性
+        $userName = $request->userName;
+        $password = $request->password;
+        if(empty($userName) or empty($password))
+            return response([
+                "code" => 0,
+                "error" => '用户名或密码不完整',
+            ]);
+
         //获取skey
         $skey = Session::getSKeyFromRequest($request);
 
         //获取Session记录
         $session = Session::findUserInfoBySKey($skey);
 
-        //检验参数完整性
-        $jobId = $request->jobId;
-        $idCardNo = $request->idCardNo;
-        if(empty($jobId) or empty($idCardNo))
+        //根据核对userName 和 password 即平台账号密码
+        $user = User::findUserByJobId($userName);
+        if($user === null)
             return response([
-                "code" => -1,
-                "error" => '用户名或密码不完整',
+                "code" => 0,
+                "error" => '用户名不存在',
             ]);
-        
 
+        //核对密码 check password
+        if(!Hash::check($password, $user->password)) {
+            return response([
+                "code" => 0,
+                "error" => '用户名与密码不匹配',
+            ]);
+        }
 
-
-        return 'sao';
+        //密码匹配，进行绑定操作
+        $user->session_id = $session->session_id;
+        if($user->save()){
+            //绑定成功
+            return response([
+                "code" => 0,
+            ]);
+        }else{
+            return response([
+                "code" => 0,
+                "error" => '绑定数据保存失败',
+            ]);
+        }
     }
 }

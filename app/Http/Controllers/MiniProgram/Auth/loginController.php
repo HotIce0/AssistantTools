@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Session;
 use Illuminate\Http\Request;
 
+/**
+ * Class LoginController
+ * @package App\Http\Controllers\MiniProgram\Auth
+ * @author Sao Guang
+ */
 class LoginController extends Controller{
     /**
      * login auth

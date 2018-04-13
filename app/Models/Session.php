@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+//By Sao Guang
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
