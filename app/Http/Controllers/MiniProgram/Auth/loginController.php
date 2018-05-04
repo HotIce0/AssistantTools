@@ -120,6 +120,8 @@ class LoginController extends Controller{
             $header = substr($response, 0, $headerSize);
             $body = substr($response, $headerSize);
         }
+
+        curl_close($curl);
         //string to stdclass's object
         $result = json_decode($body);
 

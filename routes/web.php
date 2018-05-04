@@ -19,6 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+//Route::get('/getCourseTable', 'DataFetch\DataFetchController@index');
+Route::get('/get', 'DataFetch\DataFetchController@index');
 
 
 Route::group(['prefix' => 'miniprogram'], function(){
