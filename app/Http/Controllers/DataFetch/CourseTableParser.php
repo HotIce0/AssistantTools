@@ -2,13 +2,55 @@
 
 namespace App\Http\Controllers\DataFetch;
 
-class CourseTableParser{
-    public function parseData($strHtml){
-        $html = new \simple_html_dom();
-        //加载网页数据
-        $html->load($strHtml);
+use QL\QueryList;
 
-        $divs = $html->find('.Nsb_layout_r');
-        dd($divs);
+/**
+ * Class CourseTableParser
+ * @package App\Http\Controllers\DataFetch
+ * @author Sao Guang
+ */
+class CourseTableParser{
+    /**
+     * 解析课程表数据（HTML -> array）
+     * @param $strHtml
+     * @return array
+     * @author Sao Guang
+     */
+    public function parseData($strHtml){
+        $courseTableRule = array(
+            'kbcontent' => ['.kbcontent', 'text'],
+            'teacher' => ['[.kbcontent]']
+        );
+        $rule = array(
+            'zc' => array('#zc', 'text'),
+            'xnxq01id' => array('#xnxq01id', 'text'),
+        );
+
+        $coursesData = array();
+
+        $data = QueryList::html($strHtml);
+        $data->find('.kbcontent')->map(function ($item)use(&$coursesData){
+            $itemHtml = $item->html();
+            if($itemHtml == '&nbsp;'){
+                array_push($coursesData, 'none');
+            }else{
+                //匹配出所有的课程信息。(当天)
+                $str = '<br>'.$itemHtml;
+                $count = preg_match_all('/(?<=<br>)((?!<|>|-).)*(?=<br>)|(?<=>)((?!<|>).)*(?=<\/font>)/u', $str, $matches);
+                //读入当天的课程
+                $day = array();
+                $courseData = array();
+                for($i = 0; $i < $count; $i++){
+                    array_push($courseData, str_replace(['△', '■', '◣'], '', $matches[0][$i]));
+                    if(!(($i + 1) % 4)){
+                        array_push($day, $courseData);
+                        $courseData = array();
+                    }
+                }
+                //当天数据存入课程数据
+                array_push($coursesData, $day);
+            }
+        });
+        return $coursesData;
     }
 }

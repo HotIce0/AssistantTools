@@ -15,19 +15,64 @@ class DataFetchController extends Controller{
     //Session Id
     private $jsessionid;
 
+    /**
+     * DataFetchController constructor.
+     * @param $studentId
+     * @param $cardId
+     * @author Sao Guang
+     */
 //    public function __construct($studentId, $cardId)
 //    {
 //        $this->studentId = $studentId;
 //        $this->cardId = $cardId;
 //    }
 
-    public function index(){
+    /**
+     * 获取个人课程表数据
+     * @param null $year 学期开始的年 如2017
+     * @param null $isFirstSchoolTerm 是否是第一学期
+     * @param null $weekNum 周次 默认全部周次
+     * @return array|string 如果返回array则获取成功，如果返回string，则代表失败，string内容为错误提示信息。
+     * @author Sao Guang
+     */
+    public function getPersonalCourseTableData($year = null, $isFirstSchoolTerm = null, $weekNum = null){
         $this->studentId = '14162400891';
         $this->cardId = '43092119971118577X';
+
+        if(!$this->tryLogin()){
+            return '登陆失败，可能是学院网站异常';
+        }
+
+        if($year == null){
+            //获取课程表数据(当前上课的)
+            $courseDataHtml = $this->getCourseTable();
+            if($courseDataHtml == false)
+                return '课程表获取失败';
+        }else{
+            $courseDataHtml = $this->getPersonalCourseTable($year, $isFirstSchoolTerm == null ? true : $isFirstSchoolTerm, $weekNum == null ? '' : $weekNum);
+            if($courseDataHtml == false)
+                return '课程表获取失败';
+        }
+
+        //解析课程表数据到数组
+        $parser = new CourseTableParser();
+        $courseDataParsed = $parser->parseData($courseDataHtml);
+        dd($courseDataParsed);
+        return $courseDataParsed;
+    }
+
+
+    /**
+     * 重置账号的密码
+     * @return bool|string
+     * @author Sao Guang
+     */
+    private function ResetPersonalPassword(){
         //获取Session ID
         if(!$this->getSessionId()){
             return '获取session_id失败';
         }
+
         //重置用户密码
         if(!$this->resetPassword()){
             return '置用户密码失败';
@@ -35,7 +80,7 @@ class DataFetchController extends Controller{
 
         //首次登陆(密码为学号)
         if(!$this->login($this->studentId)){
-            return '登陆失败1';
+            return '首次登陆失败';
         }
 
         //修改密码
@@ -43,19 +88,33 @@ class DataFetchController extends Controller{
             return '修改密码失败';
         }
 
-        //再次登陆(密码为默认密码)
-        if(!$this->login(DataFetchController::DEFAULT_PASSWROD)){
-            return '登陆失败2';
-        }
-
-        //获取课程表数据
-        $courseData = $this->getCourseTable();
-
-        $parser = new CourseTableParser();
-        $parser->parseData($courseData);
-
-        return 'ok';
+        return true;
     }
+
+    /**
+     * 尝试登陆到教务管理系统
+     * @return bool
+     * @author Sao Guang
+     */
+    private function tryLogin(){
+        if(!$this->getSessionId()){
+            return false;
+        }
+        if(!$this->login(DataFetchController::DEFAULT_PASSWROD)){
+            //登陆失败
+
+            //重置密码
+            if(!$this->ResetPersonalPassword()){
+                //重置失败
+                return false;
+            }
+
+            //再次尝试登陆
+            return $this->tryLogin();
+        }
+        return true;
+    }
+
 
     /**
      * 获取session id
@@ -85,7 +144,7 @@ class DataFetchController extends Controller{
     }
 
     /**
-     * 重置用户密码
+     * 重置用户密码 步骤请求
      * @return bool
      * @author Sao Guang
      */
@@ -115,7 +174,7 @@ class DataFetchController extends Controller{
     }
 
     /**
-     * 登陆
+     * 登陆 步骤请求
      * @param $password
      * @return bool
      * @author Sao Guang
@@ -144,7 +203,7 @@ class DataFetchController extends Controller{
     }
 
     /**
-     * 修改密码
+     * 修改密码 步骤请求
      * @return bool
      * @author Sao Guang
      */
@@ -175,7 +234,7 @@ class DataFetchController extends Controller{
     }
 
     /**
-     * 获取初始课程表网页数据
+     * 获取初始课程表网页数据 步骤请求
      * @return bool|mixed
      * @author Sao Guang
      */
@@ -187,9 +246,49 @@ class DataFetchController extends Controller{
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);//设置不输出返回数据到页面。
         $res = curl_exec($ch);
-        if(curl_getinfo($ch, CURLINFO_HTTP_CODE) === 200)
-            return $res;
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);//释放curl
+        if($httpCode === 200)
+            if(!empty($res))
+                return $res;
+            else
+                return false;
         else
             return false;
+    }
+
+    /**
+     * 获取个人课程表 步骤请求
+     * @param $startYear 学年开始的年份如2017
+     * @param $isFirstSchoolTerm 是否是第一学期
+     * @param string $weekNum 周次如1，2....默认值为空，代表所有周次
+     * @return bool|mixed
+     * @author Sao Guang
+     */
+    private function getPersonalCourseTable($startYear, $isFirstSchoolTerm, $weekNum = ''){
+        $header = [
+            'Content-Type:application/x-www-form-urlencoded'
+        ];
+        $cookie = 'JSESSIONID=' . $this->jsessionid . ';';
+        $postFields = 'zc='.$weekNum.'&xnxq01id='.$startYear.'-'.($startYear + 1).'-'.($isFirstSchoolTerm ? '1' : '2');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'http://bkjw.hnist.cn/jsxsd/xskb/xskb_list.do');
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);//设置不输出返回数据到页面。
+        $res = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);//释放curl
+        if($httpCode == 200){
+            if(!empty($res))
+                return $res;
+            else
+                return false;
+        }else{
+            return false;
+        }
     }
 }
