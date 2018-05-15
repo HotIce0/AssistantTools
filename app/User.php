@@ -88,4 +88,16 @@ class User extends Authenticatable
         else
             return $user;
     }
+
+    /**
+     * 是否是学生
+     * @return bool
+     * @author Sao Guang
+     */
+    public function isStudent(){
+        if($this->user_type == 0)
+            return true;
+        else
+            return false;
+    }
 }

@@ -30,3 +30,15 @@ if (! function_exists('apiSuccessResponse')) {
         ]);
     }
 }
+
+if (! function_exists('apiIsSuccess')) {
+    /**
+     * api是否执行成功
+     * @param $data
+     * @return bool
+     * @author Sao Guang
+     */
+    function apiIsSuccess($data){
+        return $data['code'] == 0;
+    }
+}

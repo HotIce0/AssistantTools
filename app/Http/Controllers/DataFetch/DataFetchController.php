@@ -21,43 +21,33 @@ class DataFetchController extends Controller{
      * @param $cardId
      * @author Sao Guang
      */
-//    public function __construct($studentId, $cardId)
-//    {
-//        $this->studentId = $studentId;
-//        $this->cardId = $cardId;
-//    }
+    public function __construct($studentId, $cardId)
+    {
+        $this->studentId = $studentId;
+        $this->cardId = $cardId;
+    }
 
     /**
      * 获取个人课程表数据
      * @param null $year 学期开始的年 如2017
-     * @param null $isFirstSchoolTerm 是否是第一学期
-     * @param null $weekNum 周次 默认全部周次
+     * @param null $term 学期1或2
+     * @param '' $weekNum 周次 默认全部周次
      * @return array|string 如果返回array则获取成功，如果返回string，则代表失败，string内容为错误提示信息。
      * @author Sao Guang
      */
-    public function getPersonalCourseTableData($year = null, $isFirstSchoolTerm = null, $weekNum = null){
-        $this->studentId = '14162400891';
-        $this->cardId = '43092119971118577X';
-
+    public function getPersonalCourseTableData($year = null, $term = null, $weekNum = ''){
         if(!$this->tryLogin()){
-            return '登陆失败，可能是学院网站异常';
+            return '登陆失败，可能是学院网站异常或者学号不存在';
         }
 
-        if($year == null){
-            //获取课程表数据(当前上课的)
-            $courseDataHtml = $this->getCourseTable();
-            if($courseDataHtml == false)
-                return '课程表获取失败';
-        }else{
-            $courseDataHtml = $this->getPersonalCourseTable($year, $isFirstSchoolTerm == null ? true : $isFirstSchoolTerm, $weekNum == null ? '' : $weekNum);
-            if($courseDataHtml == false)
-                return '课程表获取失败';
-        }
+        //获取课表html
+        $courseDataHtml = $this->getPersonalCourseTable($year, $term, $weekNum);
+        if($courseDataHtml == false)
+            return '课程表获取失败';
 
         //解析课程表数据到数组
         $parser = new CourseTableParser();
         $courseDataParsed = $parser->parseData($courseDataHtml);
-        dd($courseDataParsed);
         return $courseDataParsed;
     }
 
@@ -110,7 +100,10 @@ class DataFetchController extends Controller{
             }
 
             //再次尝试登陆
-            return $this->tryLogin();
+            if(!$this->login(DataFetchController::DEFAULT_PASSWROD))
+                return false;
+            else
+                return true;
         }
         return true;
     }
@@ -260,17 +253,20 @@ class DataFetchController extends Controller{
     /**
      * 获取个人课程表 步骤请求
      * @param $startYear 学年开始的年份如2017
-     * @param $isFirstSchoolTerm 是否是第一学期
+     * @param $term 学期1或2
      * @param string $weekNum 周次如1，2....默认值为空，代表所有周次
      * @return bool|mixed
      * @author Sao Guang
      */
-    private function getPersonalCourseTable($startYear, $isFirstSchoolTerm, $weekNum = ''){
+    private function getPersonalCourseTable($startYear = null, $term = null, $weekNum){
         $header = [
             'Content-Type:application/x-www-form-urlencoded'
         ];
         $cookie = 'JSESSIONID=' . $this->jsessionid . ';';
-        $postFields = 'zc='.$weekNum.'&xnxq01id='.$startYear.'-'.($startYear + 1).'-'.($isFirstSchoolTerm ? '1' : '2');
+        if($startYear != null && $term != null)
+            $postFields = 'zc='.$weekNum.'&xnxq01id='.$startYear.'-'.($startYear + 1).'-'.$term;
+        else
+            $postFields = 'zc='.$weekNum;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'http://bkjw.hnist.cn/jsxsd/xskb/xskb_list.do');
         curl_setopt($ch, CURLOPT_HEADER, true);

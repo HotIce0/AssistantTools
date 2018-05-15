@@ -14,7 +14,7 @@ class CreateTCourseForeignKeyTable extends Migration
     public function up()
     {
         \Illuminate\Support\Facades\Schema::table('t_course', function ($table){
-            $table->foreign('teacher_info_id')->references('teacher_info_id')->on('t_teacher_info');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -26,7 +26,7 @@ class CreateTCourseForeignKeyTable extends Migration
     public function down()
     {
         \Illuminate\Support\Facades\Schema::table('t_course', function ($table){
-            $table->dropForeign(['teacher_info_id']);
+            $table->dropForeign(['user_id']);
         });
     }
 }

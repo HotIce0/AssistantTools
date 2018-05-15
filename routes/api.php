@@ -32,3 +32,11 @@ Route::group(['prefix' => 'bind'], function() {
     Route::post('bind', 'MiniProgram\Bind\BindController@bind');
 });
 
+/**
+ * 小程序学生用户使用个人课程表
+ * @author Sao Guang
+ */
+Route::group(['prefix' => 'courseTable'], function (){
+    Route::post('getPersonalCourseTable', 'MiniProgram\PersonalCourseTableController@getPersonalCourseTable');
+});
+

@@ -17,13 +17,13 @@ class BindController extends Controller{
     /**
      * 获取绑定状态的API
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return array|bool|\Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function getBindStatus(Request $request){
-        $res = Session::checkLogin($request);
-        if($res['code'] == -1){
-            //登陆验证失败
-            return response($res);
+        //验证登陆状态
+        $res = Session::checkLoginAndGetSession($request);
+        if(!apiIsSuccess($res)){
+            return $res;
         }
         //登陆验证通过
 
@@ -33,18 +33,15 @@ class BindController extends Controller{
         $session = Session::findUserInfoBySKey($skey);
 
         //查询用户绑定状态
-        $user = User::where('session_id', '=', $session->session_id)
-            ->first();
-
-        if(empty($user)){
+        if(Session::isBind($session->session_id)){
             return response([
                 'code' => 0,
-                'bindstatus' => false,
+                'bindstatus' => true,
             ]);
         }else{
             return response([
                 'code' => 0,
-                'bindstatus' => true,
+                'bindstatus' => false,
             ]);
         }
     }

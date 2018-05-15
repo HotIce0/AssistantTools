@@ -16,7 +16,7 @@ class BasicTestSeeder extends Seeder
             'user_job_id' => '14162400891',
             'password' => bcrypt('18577X'),
             'role_id' => 1,
-            'session_id' => 1,
+            'session_id' => null,
             'user_type' => 0,
             'user_info_id' => 1,
         ]);

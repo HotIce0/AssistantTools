@@ -51,6 +51,14 @@ class CourseTableParser{
                 array_push($coursesData, $day);
             }
         });
+        //获取学年和学期信息
+        $str = $data->find('#xnxq01id')->html();
+        //dd($str);
+        preg_match_all('/(?<=selected>).*(?=<\/option>)/u', $str, $matches);
+
+
+        $coursesData['year'] = substr($matches[0][0], 0, 4);
+        $coursesData['term'] = substr($matches[0][0], 10, 1);
         return $coursesData;
     }
 }

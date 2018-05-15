@@ -2,6 +2,7 @@
 
 namespace App\Models;
 //By Sao Guang
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -60,7 +61,6 @@ class Session extends Model
                 'code' => -1,
                 'error' => 'skey missing',
             ];
-
         $session = self::findUserInfoBySKey($skey);
 
         if(empty($session)){
@@ -103,5 +103,45 @@ class Session extends Model
      */
     public static function getSKeyFromRequest(Request $request){
         return $request->header(config('constants.WX_HEADER_SKEY'));
+    }
+
+    /**
+     * 验证登陆状态，如果成功则返回携带数据库session对象
+     * @param Request $request
+     * @return array|bool 返回值中的code 为0 代表成功.-1代表失败。
+     * @author Sao Guang
+     */
+    public static function checkLoginAndGetSession(Request $request){
+        $res = Session::checkLogin($request);
+        if($res['code'] == -1){
+            //登陆验证失败
+            return $res;
+        }
+
+        $skey = Session::getSKeyFromRequest($request);
+
+        //获取Session记录
+        $session = Session::findUserInfoBySKey($skey);
+
+        $result['session'] = $session;
+        $result['code'] = 0;
+
+        return $result;
+    }
+
+    /**
+     * 是否绑定了平台账号
+     * @param $session_id
+     * @return bool| $user 如果绑定了平台账号，返回平台账号信息，否则返回false
+     * @author Sao Guang
+     */
+    public static function isBind($session_id){
+        //查询用户绑定状态
+        $user = User::where('session_id', '=', $session_id)
+            ->first();
+        if($user === null)
+            return false;
+        else
+            return $user;
     }
 }
