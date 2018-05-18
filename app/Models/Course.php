@@ -35,15 +35,24 @@ class Course extends Model
         if($user == null){
             return '用户ID无效';
         }
-        $student_id = $user->user_job_id;
+
         $userInfo = $user->getUserInfo();
+        $student_id = $userInfo->user_job_id;
         $card_id = $userInfo->id_card_no;
+        $isStudent = $user->isStudent();
 
         //从学院网站解析个人课程表数据。
         $dataFatch = new DataFetchController($student_id, $card_id);
-        $coursesData = $dataFatch->getPersonalCourseTableData($year, $term, $weekNum);
-        if(is_array($coursesData) === false){
-            return '爬取课程表数据失败';
+        //教师密码无法重置。必须读取教师密码登陆
+        if(!$isStudent){
+            if($userInfo->school_site_password_bkjw == null){
+                return '无法获取您的课程表 : 您未完善您学校一体化平台密码或者您已经更改密码';
+            }
+            $dataFatch->default_password = $userInfo->school_site_password_bkjw;
+        }
+        $coursesData = $dataFatch->getPersonalCourseTableData($year, $term, $weekNum, $isStudent);
+        if(!is_array($coursesData)){
+            return $coursesData;
         }
 
         //更新现在的学年和学期

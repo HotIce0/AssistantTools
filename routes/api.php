@@ -40,3 +40,9 @@ Route::group(['prefix' => 'courseTable'], function (){
     Route::post('getPersonalCourseTable', 'MiniProgram\PersonalCourseTableController@getPersonalCourseTable');
 });
 
+Route::group(['prefix' => 'basicInfo'], function (){
+    Route::get('colleges', 'BasicInfo\BasicInfoController@getColleges');
+    Route::get('majors', 'BasicInfo\BasicInfoController@getMajors');
+    Route::get('class', 'BasicInfo\BasicInfoController@getClass');
+
+});

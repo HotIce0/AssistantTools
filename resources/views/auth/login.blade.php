@@ -11,25 +11,25 @@
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+                        <div class="form-group{{ $errors->has('user_job_id') ? ' has-error' : '' }}">
+                            <label for="user_job_id" class="col-md-4 control-label">用户名</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
+                                <input id="user_job_id" type="text" class="form-control" name="user_job_id" value="{{ old('user_job_id') }}" required autofocus>
 
-                                @if ($errors->has('email'))
+                                @if ($errors->has('user_job_id'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                        <strong>{{ $errors->first('user_job_id') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
+                            <label for="password" class="col-md-4 control-label">密码</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
+                                <input id="password" type="password" class="form-control" name="password" required placeholder="用户密码(初始密码为:身份证后六位)">
 
                                 @if ($errors->has('password'))
                                     <span class="help-block">

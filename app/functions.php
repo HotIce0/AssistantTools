@@ -10,7 +10,7 @@ if (! function_exists('apiFailResponse')) {
      */
     function apiFailResponse($error){
         return json_encode([
-            'code' => -1,
+            'code' => 0,
             'error' => $error,
         ]);
     }

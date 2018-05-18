@@ -20,6 +20,7 @@ class CreateTStudentInfoTable extends Migration
             $table->integer('class_id')->unsigned()->nullable(false)->comment('班级ID');
             $table->string('id_card_no', 18)->unique()->nullable(false)->comment('身份证号码');
             $table->string('email', 80)->unique()->nullable(true)->comment('邮箱');
+            $table->string('sex', 1)->nullable(false)->comment('性别');
             $table->string('phone_number', 20)->unique()->nullable(true)->comment('手机号码');
 
             $table->string('creator', 20)->nullable();

@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class DataFetchController extends Controller{
+    const DEFAULT_PASSWORD = 'qq51747708';
     //修改密码后的默认密码
-    const DEFAULT_PASSWROD = 'qq51747708';
+    public $default_password = 'qq51747708';
     //学生证号码
     private $studentId;
     //身份证号码
@@ -35,13 +36,13 @@ class DataFetchController extends Controller{
      * @return array|string 如果返回array则获取成功，如果返回string，则代表失败，string内容为错误提示信息。
      * @author Sao Guang
      */
-    public function getPersonalCourseTableData($year = null, $term = null, $weekNum = ''){
-        if(!$this->tryLogin()){
-            return '登陆失败，可能是学院网站异常或者学号不存在';
+    public function getPersonalCourseTableData($year = null, $term = null, $weekNum = '', $isStudent = true){
+        if(!$this->tryLogin($isStudent)){
+            return '登陆失败，可能是学院网站异常或教师账号密码不正确';
         }
 
         //获取课表html
-        $courseDataHtml = $this->getPersonalCourseTable($year, $term, $weekNum);
+        $courseDataHtml = $this->getPersonalCourseTable($weekNum, $year, $term, $isStudent);
         if($courseDataHtml == false)
             return '课程表获取失败';
 
@@ -86,12 +87,16 @@ class DataFetchController extends Controller{
      * @return bool
      * @author Sao Guang
      */
-    private function tryLogin(){
+    private function tryLogin($isStudent){
         if(!$this->getSessionId()){
             return false;
         }
-        if(!$this->login(DataFetchController::DEFAULT_PASSWROD)){
+        if(!$this->login($this->default_password)){
             //登陆失败
+
+            //教师的账号无法重置密码，首次尝试登陆后直接返回，错误。
+            if(!$isStudent)
+                return false;
 
             //重置密码
             if(!$this->ResetPersonalPassword()){
@@ -100,7 +105,7 @@ class DataFetchController extends Controller{
             }
 
             //再次尝试登陆
-            if(!$this->login(DataFetchController::DEFAULT_PASSWROD))
+            if(!$this->login($this->default_password))
                 return false;
             else
                 return true;
@@ -205,7 +210,7 @@ class DataFetchController extends Controller{
             'Content-Type:application/x-www-form-urlencoded'
         ];
         $cookie = 'JSESSIONID=' . $this->jsessionid . ';';
-        $postFields = 'id=&oldpassword='.$this->studentId.'&password1='.DataFetchController::DEFAULT_PASSWROD.'&password2='.DataFetchController::DEFAULT_PASSWROD.'&button1=%E4%BF%9D+%E5%AD%98&upt=1';
+        $postFields = 'id=&oldpassword='.$this->studentId.'&password1='.$this->default_password.'&password2='.$this->default_password.'&button1=%E4%BF%9D+%E5%AD%98&upt=1';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'http://bkjw.hnist.cn/jsxsd/grsz/grsz_xgmm_beg.do');
         curl_setopt($ch, CURLOPT_HEADER, true);
@@ -227,30 +232,6 @@ class DataFetchController extends Controller{
     }
 
     /**
-     * 获取初始课程表网页数据 步骤请求
-     * @return bool|mixed
-     * @author Sao Guang
-     */
-    private function getCourseTable(){
-        $cookie = 'JSESSIONID=' . $this->jsessionid . ';';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://bkjw.hnist.cn/jsxsd/xskb/xskb_list.do');//获取课程表数据URL
-        curl_setopt($ch, CURLOPT_COOKIE, $cookie);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);//设置不输出返回数据到页面。
-        $res = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);//释放curl
-        if($httpCode === 200)
-            if(!empty($res))
-                return $res;
-            else
-                return false;
-        else
-            return false;
-    }
-
-    /**
      * 获取个人课程表 步骤请求
      * @param $startYear 学年开始的年份如2017
      * @param $term 学期1或2
@@ -258,7 +239,7 @@ class DataFetchController extends Controller{
      * @return bool|mixed
      * @author Sao Guang
      */
-    private function getPersonalCourseTable($startYear = null, $term = null, $weekNum){
+    private function getPersonalCourseTable($weekNum, $startYear = null, $term = null, $isStudent = true){
         $header = [
             'Content-Type:application/x-www-form-urlencoded'
         ];
@@ -268,7 +249,10 @@ class DataFetchController extends Controller{
         else
             $postFields = 'zc='.$weekNum;
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://bkjw.hnist.cn/jsxsd/xskb/xskb_list.do');
+        if($isStudent)
+            curl_setopt($ch, CURLOPT_URL, 'http://bkjw.hnist.cn/jsxsd/xskb/xskb_list.do');
+        else
+            curl_setopt($ch, CURLOPT_URL, 'http://bkjw.hnist.cn/jsxsd/jskb/jskb_list.do');
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_COOKIE, $cookie);
