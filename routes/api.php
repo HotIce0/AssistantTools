@@ -40,6 +40,10 @@ Route::group(['prefix' => 'courseTable'], function (){
     Route::post('getPersonalCourseTable', 'MiniProgram\PersonalCourseTableController@getPersonalCourseTable');
 });
 
+/**
+ * 基本信息获取接口路由
+ * @author Sao Guang
+ */
 Route::group(['prefix' => 'basicInfo'], function (){
     Route::get('colleges', 'BasicInfo\BasicInfoController@getColleges');
     Route::get('majors', 'BasicInfo\BasicInfoController@getMajors');
