@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 /**
+ * 用户绑定控制器
  * Class BindController
  * @package App\Http\Controllers\MiniProgram\Bind
  * @author Sao Guang

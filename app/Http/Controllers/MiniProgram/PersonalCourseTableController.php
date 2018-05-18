@@ -9,6 +9,12 @@ use App\Models\ItemSetInfo;
 use App\Models\Session;
 use Illuminate\Http\Request;
 
+/**
+ * 个人课表获取控制器（可以获取学生或教师的个人课程表）
+ * Class PersonalCourseTableController
+ * @package App\Http\Controllers\MiniProgram
+ * @author Sao Guang
+ */
 class PersonalCourseTableController extends Controller{
     /**
      * 获取个人课程表

@@ -5,6 +5,12 @@ namespace App\Http\Controllers\DataFetch;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+/**
+ * 课程表HTML数据爬取类
+ * Class DataFetchController
+ * @package App\Http\Controllers\DataFetch
+ * @author Sao Guang
+ */
 class DataFetchController extends Controller{
     const DEFAULT_PASSWORD = 'qq51747708';
     //修改密码后的默认密码

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\DataFetch;
 use QL\QueryList;
 
 /**
+ * 课程表HTML数据，解析类
  * Class CourseTableParser
  * @package App\Http\Controllers\DataFetch
  * @author Sao Guang

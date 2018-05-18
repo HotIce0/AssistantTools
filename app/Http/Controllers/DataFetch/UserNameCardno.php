@@ -5,6 +5,7 @@ namespace App\Http\Controllers\DataFetch;
 use QL\QueryList;
 
 /**
+ * 用户认证信息提供类（通过学院网站爬取）
  * Class UserNameCardno
  * @package App\Http\Controllers\DataFetch
  * @author Sao Guang

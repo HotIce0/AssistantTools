@@ -8,6 +8,12 @@ use App\Models\College;
 use App\Models\Major;
 use Illuminate\Http\Request;
 
+/**
+ * 基础信息获取接口
+ * Class BasicInfoController
+ * @package App\Http\Controllers\BasicInfo
+ * @author Sao Guang
+ */
 class BasicInfoController extends Controller{
     /**
      * 获取学院信息
