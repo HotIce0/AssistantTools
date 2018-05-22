@@ -5,6 +5,7 @@ namespace App\Http\Controllers\BasicInfo;
 use App\Http\Controllers\Controller;
 use App\Models\ClassDB;
 use App\Models\College;
+use App\Models\ItemSetInfo;
 use App\Models\Major;
 use Illuminate\Http\Request;
 
@@ -73,5 +74,21 @@ class BasicInfoController extends Controller{
             'code' => 0,
             'class' => json_encode($class),
         ];
+    }
+
+    /**
+     * 获取学年学期的范围
+     * @param Request $request
+     * @return string
+     */
+    public function getYearTermRange(Request $request){
+        $data = new \stdClass();
+        $data->start = ItemSetInfo::getStartYearTerm();
+        $data->end = ItemSetInfo::getEndYearTerm();
+        return json_encode($data);
+    }
+
+    public function test(){
+        return 'sao';
     }
 }

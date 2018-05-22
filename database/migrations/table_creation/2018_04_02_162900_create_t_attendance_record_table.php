@@ -16,7 +16,9 @@ class CreateTAttendanceRecordTable extends Migration
         Schema::create('t_attendance_record', function (Blueprint $table) {
             $table->increments('attendance_record_id');
             $table->string('course_type', 10)->nullable(false)->comment('课程类型');
-            $table->integer('course_time_associate_id')->unsigned()->nullable()->comment('课程时间联系ID');
+            $table->integer('course_id')->unsigned()->nullable()->comment('课程ID');
+            $table->integer('user_id')->unsigned()->nullable(false)->comment('用户ID');
+            $table->string('attendance_record_status', 10)->nullable(false)->comment('课程记录状态');
             
             $table->integer('leavers_num')->unsigned()->nullable(false)->comment('请假人数');
             $table->string('leave_detail', 512)->nullable()->comment('请假情况');

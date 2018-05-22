@@ -48,5 +48,15 @@ Route::group(['prefix' => 'basicInfo'], function (){
     Route::get('colleges', 'BasicInfo\BasicInfoController@getColleges');
     Route::get('majors', 'BasicInfo\BasicInfoController@getMajors');
     Route::get('class', 'BasicInfo\BasicInfoController@getClass');
+    Route::get('getYearTermRange', 'BasicInfo\BasicInfoController@getYearTermRange');
+});
+
+/**
+ * 考勤
+ * @author Sao Guang
+ */
+Route::group(['prefix' => 'attendanceRecord'], function (){
+    Route::post('getAttendanceRecord', 'MiniProgram\AttendanceRecord\AttendanceRecordController@getAttendanceRecord');
 
 });
+Route::get('test', 'BasicInfo\BasicInfoController@test');

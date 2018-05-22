@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTAttendanceRecordForeignKeyTable extends Migration
+class CreateTCourseAttendanceRecordForeignKey extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,7 @@ class CreateTAttendanceRecordForeignKeyTable extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\Schema::table('t_attendance_record', function ($table){
-            $table->foreign('course_id')->references('course_id')->on('t_course_attendance_record');
+        \Illuminate\Support\Facades\Schema::table('t_course_attendance_record', function ($table){
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
@@ -26,8 +25,7 @@ class CreateTAttendanceRecordForeignKeyTable extends Migration
      */
     public function down()
     {
-        \Illuminate\Support\Facades\Schema::table('t_attendance_record', function ($table){
-            $table->dropForeign(['course_id']);
+        \Illuminate\Support\Facades\Schema::table('t_course_attendance_record', function ($table){
             $table->dropForeign(['user_id']);
         });
     }
