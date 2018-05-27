@@ -82,11 +82,6 @@ class Course extends Model
         $year = $coursesData['year'];
         $term = $coursesData['term'];
 
-        //存储学年信息
-        if(Course::saveSchoolYearToDB($year) !== true){
-            return '存储学年信息错误';
-        }
-
         //解析数据，存储到数据库
 
         //每天五节，每周七天。35节
@@ -113,27 +108,6 @@ class Course extends Model
                     }
                 }
             }
-        }
-        return true;
-    }
-    /**
-     * 保存学年信息到数据库
-     * @param $year
-     * @return bool|string
-     * @author Sao Guang
-     */
-    private static function saveSchoolYearToDB($year){
-        $item = ItemSetInfo::where('item_content_id', '=', $year)->first();
-        if ($item == null) {
-            $newYearItem = new ItemSetInfo();
-            $newYearItem->item_no = 3;
-            $newYearItem->item_content_id = $year;
-            $newYearItem->item_content = $year;
-            $newYearItem->sort_id = 0;
-            if (!$newYearItem->save())
-                return '创建学年数据失败';
-            else
-                return true;
         }
         return true;
     }

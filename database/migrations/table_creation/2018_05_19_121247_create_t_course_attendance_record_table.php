@@ -21,7 +21,7 @@ class CreateTCourseAttendanceRecordTable extends Migration
 
             $table->string('school_year', 10)->comment('学年');
             $table->string('school_term', 10)->comment('学期');
-            $table->string('weekth', 255)->comment('周次');
+            $table->integer('weekth')->unsigned()->comment('周次');
             $table->integer('week')->unsigned()->comment('星期');
             $table->integer('section')->unsigned()->comment('节次');
 

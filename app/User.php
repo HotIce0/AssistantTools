@@ -60,6 +60,16 @@ class User extends Authenticatable
     }
 
     /**
+     * 获取所有的权限
+     * @return mixed
+     */
+    public function getPermissions(){
+        //获取对应角色
+        $role = Role::find($this->role_id);
+        return $role->role_permission;
+    }
+
+    /**
      * 获取用户信息模型对象
      * @return null
      * @author Sao Guang

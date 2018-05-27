@@ -14,7 +14,7 @@ class CreateTAttendanceRecordForeignKeyTable extends Migration
     public function up()
     {
         \Illuminate\Support\Facades\Schema::table('t_attendance_record', function ($table){
-            $table->foreign('course_id')->references('course_id')->on('t_course_attendance_record');
+            $table->foreign('course_id')->references('course_id')->on('t_course_attendance_record')->onDelete('cascade');//设置级联删除
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

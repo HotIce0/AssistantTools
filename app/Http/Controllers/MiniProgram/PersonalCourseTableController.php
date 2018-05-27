@@ -38,6 +38,11 @@ class PersonalCourseTableController extends Controller{
             ];
         }
 
+        //需要拥有获取个人课表的权限 权限编号 1
+        if(!$user->hasPermission('1')){
+            return apiFailResponse('您没有获取个人课表的权限');
+        }
+
         //是否是当前学年学期
         $isCurrentYearTerm = null;
         //是否需要最新的

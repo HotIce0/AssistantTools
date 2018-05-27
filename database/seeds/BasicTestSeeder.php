@@ -11,16 +11,6 @@ class BasicTestSeeder extends Seeder
      */
     public function run()
     {
-        //插入测试用户
-//        DB::table('users')->insert([
-//            'user_job_id' => '14162400891',
-//            'password' => bcrypt('18577X'),
-//            'role_id' => 1,
-//            'session_id' => null,
-//            'user_type' => 0,
-//            'user_info_id' => 1,
-//        ]);
-
         //课程类型
         DB::table('t_item_set_info')->insert([
             'item_no' => 1,
@@ -59,14 +49,35 @@ class BasicTestSeeder extends Seeder
         DB::table('t_item_set_info')->insert([
             'item_no' => 5,
             'item_content_id' => '1',
-            'item_content' => '2017-2',
+            'item_content' => '',
             'sort_id' => 0,
         ]);
 
         //插入角色
         DB::table('t_role')->insert([
+            'role_id' => 1,
             'role_name' => "平台会员",
+            'role_permission' => '[1]',
+        ]);
+        DB::table('t_role')->insert([
+            'role_id' => 2,
+            'role_name' => "系统管理员",
+            'role_permission' => '[2,9]',
+        ]);
+        DB::table('t_role')->insert([
+            'role_id' => 3,
+            'role_name' => "班级管理员",
+            'role_permission' => '[1,3,4,5,6,7,8,10]',
+        ]);
+        DB::table('t_role')->insert([
+            'role_id' => 4,
+            'role_name' => "学院管理员",
             'role_permission' => '[]',
+        ]);
+        DB::table('t_role')->insert([
+            'role_id' => 5,
+            'role_name' => "什么都能干的骚骚皮皮",
+            'role_permission' => '[1,2,3,4,5,6,7,8,9,10]',
         ]);
     }
 }

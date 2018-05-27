@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\DataFetch;
 
 use App\Http\Controllers\Controller;
+use App\Models\ItemSetInfo;
 use Illuminate\Http\Request;
 
 /**
- * 课程表HTML数据爬取类
+ * 学院信息门户HTML数据爬取类
  * Class DataFetchController
  * @package App\Http\Controllers\DataFetch
  * @author Sao Guang
@@ -275,6 +276,91 @@ class DataFetchController extends Controller{
                 return false;
         }else{
             return false;
+        }
+    }
+
+    /**
+     * 获取学年学期列 HTML数据
+     * @param $yearTerm
+     * @return bool|mixed
+     */
+    private function getYearTermsHTML($yearTerm = null){
+        $header = [
+            'Content-Type:application/x-www-form-urlencoded'
+        ];
+        $cookie = 'JSESSIONID=' . $this->jsessionid . ';';
+        if($yearTerm === null){
+            $postFields = '';
+        }else{
+            $postFields = 'xnxq01id='.$yearTerm;
+        }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'http://bkjw.hnist.cn/jsxsd/jxzl/jxzl_query');
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);//设置不输出返回数据到页面。
+        $res = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);//释放curl
+        if($httpCode == 200){
+            if(!empty($res))
+                return $res;
+            else
+                return false;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * 从学院服务器获取最新的，学年学期第一天日期的数据。并更新到数据库
+     * @param $isStudent
+     * @return bool|string
+     */
+    public function updataSchoolStartDate($isStudent){
+        if(!$this->tryLogin($isStudent)){
+            return '登陆失败，可能是学院网站异常或教师账号密码不正确';
+        }
+
+        $HTML = $this->getYearTermsHTML();
+        if($HTML === false)
+            return '学院网站爬去数据失败!';
+        //先解析出所有的学年学期
+        $parse = new SchoolStartDate();
+        $arrayYearTerm = $parse->parseYearTerms($HTML);
+        $yearTerms = array();
+        $startDays = array();
+        //再解析，所有学年学期，对应的开学时间
+        foreach ($arrayYearTerm as $yearTerm){
+            $HTML = $this->getYearTermsHTML($yearTerm);
+            if($HTML === false)
+                return '学院网站爬去数据失败!';
+            $startDay = $parse->parseYearTermStart($HTML);//获取到2018-9-9这样格式的开学时间的数据
+            array_push($startDays, $startDay);
+            //转化year term数据格式去除2017-2018-1 中的2018
+            $arrayTemp = explode('-', $yearTerm);
+            $yearTermDBForm = $arrayTemp[0] . '-' . $arrayTemp[2];
+            array_push($yearTerms, $yearTermDBForm);
+        }
+        //获取完所有，学年学期，与对应开学日期的数据。
+        if(count($yearTerms) == count($startDays) and count($yearTerms) > 0){
+            //更新学年，学期范围数据到数据库
+            ItemSetInfo::setStartYearTerm($yearTerms[count($yearTerms) - 1]);
+            ItemSetInfo::setEndYearTerm($yearTerms[0]);
+
+            //清空所有的学年学期，开学日期数据
+            ItemSetInfo::deleteAllYearTermStartDate();
+            //将最新的数据添加上去
+            $count = count($yearTerms);
+            for ($i = 0; $i < $count; $i++){
+                ItemSetInfo::addYearTermStartDate($yearTerms[$i], $startDays[$i]);
+            }
+            return true;
+        }else{
+            return '学年学期，开学日期获取不完整，更新失败';
         }
     }
 }

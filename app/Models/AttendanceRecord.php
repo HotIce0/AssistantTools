@@ -10,4 +10,5 @@ class AttendanceRecord extends Model
 
     protected $primaryKey = 'attendance_record_id';
 
+
 }
