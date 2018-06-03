@@ -18,6 +18,7 @@ class CreateTClassTable extends Migration
             $table->string('class_identifier', 20)->unique()->comment('班级编号');
             $table->string('class_name', 50)->comment('班级名称');
             $table->integer('major_id')->unsigned()->comment('所属专业');
+            $table->integer('class_person_num')->unsigned()->comment('班级人数');
 
             $table->string('creator', 20)->nullable();
             $table->string('updater', 20)->nullable();

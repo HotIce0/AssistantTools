@@ -79,6 +79,8 @@ Route::group(['prefix' => 'attendanceRecord'], function (){
     Route::post('generateAttendanceRecord', 'MiniProgram\AttendanceRecord\AttendanceRecordController@generateAttendanceRecord');
     Route::post('getAttendanceRecord', 'MiniProgram\AttendanceRecord\AttendanceRecordController@getAttendanceRecord');
     Route::post('saveAttendanceRecord', 'MiniProgram\AttendanceRecord\AttendanceRecordController@saveAttendanceRecord');
+
+    Route::get('queryAttendanceRecordStatisticalData', 'MiniProgram\AttendanceRecord\AttendanceRecordController@queryAttendanceRecordStatisticalData');
 });
 
 /**

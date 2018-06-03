@@ -87,6 +87,7 @@ class CourseAttendanceRecord extends Model
      * @return bool|string
      */
     public static function copyAndParsePersonalCourseGenerateARData($user_id, $year, $term){
+        $class_id = User::find($user_id)->getUserInfo()->class_id;
         $personalCoursesData = Course::where([
             ['user_id', '=', $user_id],
             ['school_year', '=', $year],
@@ -134,6 +135,7 @@ class CourseAttendanceRecord extends Model
                 $attendanceRecord->course_type = '1';   //课程类型 '1' 代表为正式课程
                 $attendanceRecord->course_id = $courseAttendanceRecord->course_id;
                 $attendanceRecord->user_id = $course->user_id;
+                $attendanceRecord->class_id = $class_id;
                 $attendanceRecord->attendance_record_status = '1';//考勤记录状态 '1' 代表未填写
                 if(!$attendanceRecord->save()){
                     //清空异常数据

@@ -4,8 +4,11 @@ namespace App\Http\Controllers\MiniProgram\AttendanceRecord;
 
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceRecord;
+use App\Models\ClassDB;
 use App\Models\CourseAttendanceRecord;
+use App\Models\Major;
 use App\Models\Session;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -16,6 +19,18 @@ use Illuminate\Support\Facades\Validator;
  * @author Sao Guang
  */
 class AttendanceRecordController extends Controller{
+    public function queryAttendanceRecordStatisticalData(Request $request){
+        //查询学院考勤数据(按照每个专业进行数据查询)
+        AttendanceRecord::attendanceRecordStatisticsByCollegeID(1, 2017, 2, 13);
+
+        $college_id = 1;
+        $majors = Major::where('college_id', '=', $college_id)
+            ->select('major_id', 'major_name')
+            ->get();
+        dd($majors);
+        //AttendanceRecord::where()
+    }
+
     /**
      * 查询考勤记录
      * @param Request $request

@@ -15,6 +15,7 @@ class CreateTCourseAttendanceRecordForeignKey extends Migration
     {
         \Illuminate\Support\Facades\Schema::table('t_course_attendance_record', function ($table){
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('class_id')->references('class_id')->on('t_class');
         });
     }
 
@@ -27,6 +28,7 @@ class CreateTCourseAttendanceRecordForeignKey extends Migration
     {
         \Illuminate\Support\Facades\Schema::table('t_course_attendance_record', function ($table){
             $table->dropForeign(['user_id']);
+            $table->dropForeign(['class']);
         });
     }
 }

@@ -18,6 +18,7 @@ class CreateTAttendanceRecordTable extends Migration
             $table->string('course_type', 10)->nullable(false)->comment('课程类型');
             $table->integer('course_id')->unsigned()->nullable()->comment('课程ID');
             $table->integer('user_id')->unsigned()->unique()->nullable(false)->comment('用户ID');
+            $table->integer('class_id')->unsigned()->nullable(false)->comment('班级ID');
             $table->string('attendance_record_status', 10)->nullable(false)->comment('课程记录状态');
             
             $table->integer('leavers_num')->unsigned()->nullable()->comment('请假人数');
