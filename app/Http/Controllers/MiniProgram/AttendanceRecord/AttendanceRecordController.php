@@ -19,16 +19,79 @@ use Illuminate\Support\Facades\Validator;
  * @author Sao Guang
  */
 class AttendanceRecordController extends Controller{
+    /**
+     * 查询考勤统计数据
+     * @param Request $request
+     * @return array|bool|string
+     */
     public function queryAttendanceRecordStatisticalData(Request $request){
-        //查询学院考勤数据(按照每个专业进行数据查询)
-        AttendanceRecord::attendanceRecordStatisticsByCollegeID(1, 2017, 2, 13);
+        //登陆验证
+        $res = Session::checkLoginAndGetSession($request);
+        if(!apiIsSuccess($res)){
+            return $res;
+        }
+        //判断是否绑定
+        $user = Session::isBind($res['session']->session_id);
+        if($user === false){
+            return [
+                'code' => 0,
+                'error' => '未绑定平台账号',
+            ];
+        }
 
-        $college_id = 1;
-        $majors = Major::where('college_id', '=', $college_id)
-            ->select('major_id', 'major_name')
-            ->get();
-        dd($majors);
-        //AttendanceRecord::where()
+        //需要拥有查询考勤统计数据的权限 权限编号 11
+        if(!$user->hasPermission('11')){
+            return apiFailResponse('您没有查询考勤统计数据的权限');
+        }
+
+        //验证规则
+        $rules = array(
+            'year' => 'required|integer|min:1',
+            'term' => 'required|integer|min:1|max:2',
+            'weekth' => 'required|integer|min:1|max:30',
+            'queryType' => 'required',
+            'ids' => 'required|json',
+        );
+        //错误消息
+        $message = array(
+            'required'=>':attribute 必须填写',
+            'integer' => ':attribute 必须是整数',
+            'min' => ':attribute 必须为正整数',
+            'term.max' => ':attribute 最大值为2',
+            'weekth.max' => ':attribute 最大值为 30',
+        );
+        //字段意义
+        $meaning = array(
+            'year' => '学年',
+            'term' => '学期',
+            'weekth' => '周次',
+            'queryType' => '查询类型',
+            'ids' => '查询用的ID数据',
+        );
+        //表单验证
+        $validator = Validator::make($request->all(), $rules, $message, $meaning);
+        if($validator->fails()){
+            return apiFailResponse($validator->errors());
+        }
+
+        $ids = json_decode($request->ids);
+        $data = array();
+        //根据查询类型，查询数据
+        if($request->queryType == '1'){
+            //查询指定学院的考勤统计信息
+            foreach ($ids as $id)
+                array_push($data, AttendanceRecord::attendanceRecordStatisticsByCollegeID($id, $request->year, $request->term, $request->weekth));
+        }elseif($request->queryType == '2'){
+            //查询指定专业的考勤统计信息
+            foreach ($ids as $id)
+                array_push($data, AttendanceRecord::attendanceRecordStatisticsByMajorID($id, $request->year, $request->term, $request->weekth));
+        }elseif($request->queryType == '3'){
+            //查询指定班级的考勤统计信息
+            foreach ($ids as $id)
+                array_push($data, AttendanceRecord::attendanceRecordStatisticsByClassID($id, $request->year, $request->term, $request->weekth));
+        }
+
+        return apiSuccessResponse(json_encode($data));
     }
 
     /**

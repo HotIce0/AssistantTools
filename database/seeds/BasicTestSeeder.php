@@ -67,7 +67,7 @@ class BasicTestSeeder extends Seeder
         DB::table('t_role')->insert([
             'role_id' => 3,
             'role_name' => "班级管理员",
-            'role_permission' => '[1,3,4,5,6,7,8,10]',
+            'role_permission' => '[1,3,4,5,6,7,8,10,11,12]',
         ]);
         DB::table('t_role')->insert([
             'role_id' => 4,
@@ -77,7 +77,7 @@ class BasicTestSeeder extends Seeder
         DB::table('t_role')->insert([
             'role_id' => 5,
             'role_name' => "什么都能干的骚骚皮皮",
-            'role_permission' => '[1,2,3,4,5,6,7,8,9,10]',
+            'role_permission' => '[1,2,3,4,5,6,7,8,9,10,11,12]',
         ]);
     }
 }

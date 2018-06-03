@@ -79,8 +79,8 @@ Route::group(['prefix' => 'attendanceRecord'], function (){
     Route::post('generateAttendanceRecord', 'MiniProgram\AttendanceRecord\AttendanceRecordController@generateAttendanceRecord');
     Route::post('getAttendanceRecord', 'MiniProgram\AttendanceRecord\AttendanceRecordController@getAttendanceRecord');
     Route::post('saveAttendanceRecord', 'MiniProgram\AttendanceRecord\AttendanceRecordController@saveAttendanceRecord');
-
-    Route::get('queryAttendanceRecordStatisticalData', 'MiniProgram\AttendanceRecord\AttendanceRecordController@queryAttendanceRecordStatisticalData');
+    //需要拥有查询考勤统计数据的权限 11
+    Route::post('queryAttendanceRecordStatisticalData', 'MiniProgram\AttendanceRecord\AttendanceRecordController@queryAttendanceRecordStatisticalData');
 });
 
 /**
